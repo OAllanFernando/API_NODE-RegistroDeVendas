@@ -1,0 +1,13 @@
+// docs base https://sequelize.org/docs/v6/other-topics/migrations/
+
+// modulo para gerenciar diretorios e caminhos 
+const path = require('path');
+
+
+// indica o local dos dir em relação ao bd
+module.exports = {
+  'config': path.resolve('db', 'config', 'config.js'),
+  'models-path': path.resolve('db', 'models'),
+  'seeders-path': path.resolve('db', 'seeders'),
+  'migrations-path': path.resolve('db', 'migrations')
+}
