@@ -2,33 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Pessoa', {
+    await queryInterface.createTable('Produtos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nome: {
-        type: Sequelize.STRING
-      },
       codigo: {
         type: Sequelize.INTEGER
       },
-      telefone: {
+      nome: {
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING
-      },
-      enderecoId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Endereco', 
-          key: 'id' 
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT'
+      preco: {
+        type: Sequelize.DOUBLE
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Pessoa');
+    await queryInterface.dropTable('Produtos');
   }
 };

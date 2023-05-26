@@ -23,7 +23,7 @@ router.post("/pessoa", async (req, res) => {
     });
 
 });
-
+/*
 router.get("/pessoa", async (req, res) => {
     //lista os dados
     const pessoas = await db.Pessoa.findAll({
@@ -43,6 +43,45 @@ router.get("/pessoa", async (req, res) => {
             mensagem: "Erro: Não foi possível listar os registros"
         });
 
+    }
+});*/
+router.get("/pessoa", async (req, res) => {
+    try {
+        const pessoas = await db.Pessoa.findAll({
+            // como preciso relacioar a cidade na listagem uso o include para trzer os valores
+            //https://www.youtube.com/watch?v=JYFe7jlOA8E
+             order: [['id', 'DESC']],
+            include: [
+                {
+                    model: db.Endereco,
+                    include: [{
+                        model: db.Bairro,
+                        include: [{
+                            model: db.Cidade,
+                            attributes: ['nome']
+                        }]
+                    }]
+                }
+            ],
+           
+            
+        });
+
+        if (pessoas) {
+            console.log(pessoas);
+            return res.json({
+                pessoas
+            });
+        } else {
+            return res.status(400).json({
+                mensagem: "Erro: Não foi possível listar os registros"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            mensagem: "Erro: Ocorreu um erro ao listar os registros"
+        });
     }
 });
 

@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Endereco.belongsTo(models.Bairro, {
         foreignKey: 'bairroId',
-        as: 'bairro'
+        
       });
     }
   }
@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     codigo: DataTypes.INTEGER,
     rua: DataTypes.STRING,
     numero: DataTypes.INTEGER,
-    complemento: DataTypes.STRING
+    complemento: DataTypes.STRING,
+    
   }, {
     sequelize,
     modelName: 'Endereco',

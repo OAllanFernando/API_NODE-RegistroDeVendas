@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Produto', {
+    await queryInterface.createTable('Enderecos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,11 +12,23 @@ module.exports = {
       codigo: {
         type: Sequelize.INTEGER
       },
-      nome: {
+      rua: {
         type: Sequelize.STRING
       },
-      preco: {
-        type: Sequelize.DOUBLE
+      numero: {
+        type: Sequelize.INTEGER
+      },
+      complemento: {
+        type: Sequelize.STRING
+      },
+      bairroId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Bairro', 
+          key: 'id' 
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Produto');
+    await queryInterface.dropTable('Enderecos');
   }
 };

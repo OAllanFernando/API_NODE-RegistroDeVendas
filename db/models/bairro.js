@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Bairro.belongsTo(models.Cidade, {
         foreignKey: 'cidadeId',
-        as: 'cidade'
+        
       });
     }
   }
