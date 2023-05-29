@@ -11,14 +11,14 @@ router.post("/endereco", async (req, res) => {
     var dados = req.body;
     console.log(dados);
     // salva no banco
-    await db.Cidade.create(dados).then((dadosUsuario) => {
+    await db.Endereco.create(dados).then((dadosUsuario) => {
         return res.json({
-            mensagem: "Cidade cadastrada com sucesso!",
+            mensagem: "Endereco cadastrado com sucesso!",
             dadosUsuario
         });
     }).catch(() => {
         return res.status(400).json({
-            mensagem: "Cidade não cadastrada erro no processo!",
+            mensagem: "Endereco não cadastrado erro no processo!",
         });
     });
 
@@ -26,16 +26,16 @@ router.post("/endereco", async (req, res) => {
 
 router.get("/endereco", async (req, res) => {
     //lista os dados
-    const cidades = await db.Cidade.findAll({
+    const enderecos = await db.Endereco.findAll({
         //Indica quais colunas quero, caso necessário
         //attributes:['id','codigo','nome', 'telefone', 'email'],
 
         // ordena decrecentemente pelo id
         order: [['id', 'DESC']]
     });
-    if (cidades) {
+    if (enderecos) {
         return res.json({
-            cidades
+            enderecos
         });
     } else {
         //Se der erro..
@@ -86,6 +86,29 @@ router.delete("/endereco/:id", async (req, res) => {
     });
 
 });
+
+ /// busca o o maior id
+ router.get("/enderecomaior", async (req, res) => {
+    
+    try {
+       const maiorId = await db.Endereco.findOne({
+        // passa a coluna e depois ordem decrecente 
+        order:[['id', 'DESC']]
+      });
+      if(maiorId === null){
+        console.log('nulo')
+       return res.json({maiorId: 0 });
+        
+      }
+        return res.json({  maiorId: maiorId.id  });
+      
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível encontrar o maior"
+      });
+    }
+  });
 
 // exporta a router para usar no app
 module.exports = router;

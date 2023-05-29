@@ -11,14 +11,7 @@ module.exports = {
       },
       codigo: {
         type: Sequelize.INTEGER
-      },
-      quantidade: {
-        type: Sequelize.INTEGER
-      },
-      produtoId: {
-        type: Sequelize.INTEGER
-      },
-    
+      },    
       total: {
         type: Sequelize.DOUBLE
       },

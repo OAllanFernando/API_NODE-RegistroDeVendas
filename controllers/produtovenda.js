@@ -2,40 +2,40 @@
 // gerencia as requisições, rotas e urls
 const express = require('express');
 //conexão com banco
-const db = require('./../db/models');
+const db = require('../db/models');
 // chama a função do express, permite modularizar o projeto com os controllers, tornando esses metodos acessiveis
 const router = express.Router();
 
 //rota de cadastro 
-router.post("/produto", async (req, res) => {
+router.post("/produtovenda", async (req, res) => {
     var dados = req.body;
     
     // salva no banco
-    await db.Produto.create(dados).then((dadosUsuario) => {
+    await db.ProdutoVenda.create(dados).then((dadosUsuario) => {
         return res.json({
-            mensagem: "Produto cadastrado com sucesso!",
+            mensagem: "Venda cadastrada com sucesso!",
             
         });
     }).catch(() => {
         return res.status(400).json({
-            mensagem: "Produto não cadastrado erro no processo!",
+            mensagem: "Venda não realizada erro no processo!",
         });
     });
 
 });
 
-router.get("/produto", async (req, res) => {
+router.get("/produtovenda", async (req, res) => {
     //lista os dados
-    const produtos = await db.Produto.findAll({
+    const vendas = await db.ProdutoVenda.findAll({
         //Indica quais colunas quero, caso necessário
         //attributes:['id','codigo','nome', 'telefone', 'email'],
 
         // ordena decrecentemente pelo id
         order: [['id', 'DESC']]
     });
-    if (produtos) {
+    if (vendas) {
         return res.json({
-            produtos
+            vendas
         });
     } else {
         //Se der erro..
@@ -47,15 +47,15 @@ router.get("/produto", async (req, res) => {
 });
 
 //rota de edição
-router.put("/produto", async (req, res) => {
+router.put("/produtovenda", async (req, res) => {
     //recebo os dados
     var dados = req.body;
     console.log(dados);
 
-    await db.Produto.update(dados, {where: {id: dados.id}})
+    await db.ProdutoVenda.update(dados, {where: {id: dados.id}})
     .then(()=>{
         return res.json({
-            mensagem: "Registro editado!"
+            mensagem: "Venda editado!"
         });
     }).catch(()=>{
         return res.json({
@@ -66,13 +66,13 @@ router.put("/produto", async (req, res) => {
 } );
 
 //rota de exclusão
-router.delete("/produto/:id", async (req, res) => {
+router.delete("/produtovenda/:id", async (req, res) => {
 
     //pega o dado da url
     const { id } = req.params;
 
     //pega o id e com o where indica qual o id a ser excluido no banco
-    await db.Produto.destroy({
+    await db.ProdutoVenda.destroy({
         where: { id }
     }).then(() => {
         return res.json({
@@ -87,11 +87,12 @@ router.delete("/produto/:id", async (req, res) => {
 
 });
 
+
  /// busca o o maior id
- router.get("/produtomaior", async (req, res) => {
+ router.get("/produtovendamaior", async (req, res) => {
     
     try {
-       const maiorId = await db.Produto.findOne({
+       const maiorId = await db.ProdutoVenda.findOne({
         // passa a coluna e depois ordem decrecente 
         order:[['id', 'DESC']]
        
@@ -101,6 +102,7 @@ router.delete("/produto/:id", async (req, res) => {
        return res.json({maiorId: 0 });
         
       }
+
         return res.json({   maiorId: maiorId.id   });
       
     } catch (error) {

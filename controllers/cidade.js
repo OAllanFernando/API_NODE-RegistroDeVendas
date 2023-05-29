@@ -89,5 +89,29 @@ router.delete("/cidade/:id", async (req, res) => {
     });
 
 });
+
+ /// busca o o maior id
+ router.get("/cidademaior", async (req, res) => {
+    
+    try {
+       const maiorId = await db.Cidade.findOne({
+        // passa a coluna e depois ordem decrecente 
+        order:[['id', 'DESC']]
+       
+      });
+      if(maiorId === null){
+        console.log('nulo')
+       return res.json({maiorId: 0 });
+        
+      }
+        return res.json({  maiorId: maiorId.id   });
+      
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível encontrar o maior"
+      });
+    }
+  });
 // exporta a router para usar no app
 module.exports = router;

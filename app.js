@@ -13,6 +13,7 @@ const bairro = require('./controllers/bairro');
 const produto = require('./controllers/produto');
 const venda = require('./controllers/venda');
 const cidade = require('./controllers/cidade');
+const produtovenda = require('./controllers/produtovenda');
 
 // middleware, permite que sea utilizado json nas requisições
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use('/', endereco);
 app.use('/', bairro);
 app.use('/', produto);
 app.use('/', venda);
+app.use('/', produtovenda);
 
 //Inicia o servidor
 app.listen(8080, () => {

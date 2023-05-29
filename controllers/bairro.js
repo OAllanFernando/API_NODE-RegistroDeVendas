@@ -32,7 +32,11 @@ router.get("/bairro", async (req, res) => {
         //attributes:['id','codigo','nome', 'telefone', 'email'],
 
         // ordena decrecentemente pelo id
-        order: [['id', 'DESC']]
+        order: [['id', 'DESC']],
+        include: [{
+            model: db.Cidade,
+            attributes: ['nome']
+        }]
     });
     if (bairros) {
         return res.json({
@@ -87,6 +91,60 @@ router.delete("/bairro/:id", async (req, res) => {
     });
 
 });
+
+
+
+/// busca o bairro conforme a cidade
+router.get("/bairro/:id", async (req, res) => {
+    const cidadeId = req.params.id;
+  
+    try {
+      const bairros = await db.Bairro.findAll({
+        
+        attributes: ["id","nome"],
+        where: { cidadeId }
+      });
+  
+      if (bairros.length > 0) {
+        return res.json({ bairros });
+      } else {
+        return res.status(404).json({
+          mensagem: "Nenhum bairro encontrado"
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível listar os bairros"
+      });
+    }
+  });
+
+
+  /// busca o o maior id
+router.get("/bairromaior", async (req, res) => {
+    
+    try {
+       const maiorId = await db.Bairro.findOne({
+        // passa a coluna e depois ordem decrecente 
+        order:[['id', 'DESC']]
+        
+      });
+      if(maiorId === null){
+        console.log('nulo')
+       return res.json({maiorId: 0 });
+        
+      }
+
+        return res.json({   maiorId: maiorId.id  });
+      
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível encontrar o maior"
+      });
+    }
+  });
 
 
 // exporta a router para usar no app

@@ -24,14 +24,18 @@ router.post("/venda", async (req, res) => {
 
 });
 
-router.get("/produto", async (req, res) => {
+router.get("/venda", async (req, res) => {
     //lista os dados
     const vendas = await db.Venda.findAll({
         //Indica quais colunas quero, caso necessário
         //attributes:['id','codigo','nome', 'telefone', 'email'],
 
         // ordena decrecentemente pelo id
-        order: [['id', 'DESC']]
+        order: [['id', 'DESC']],
+         include: [{
+            model: db.Pessoa,
+            attributes: ['nome']
+        }]
     });
     if (vendas) {
         return res.json({
@@ -86,6 +90,32 @@ router.delete("/venda/:id", async (req, res) => {
     });
 
 });
+
+
+ /// busca o o maior id
+ router.get("/vendamaior", async (req, res) => {
+    
+    try {
+       const maiorId = await db.Venda.findOne({
+        // passa a coluna e depois ordem decrecente 
+        order:[['id', 'DESC']]
+       
+      });
+      if(maiorId === null){
+        console.log('nulo')
+       return res.json({maiorId: 0 });
+        
+      }
+
+        return res.json({   maiorId: maiorId.id   });
+      
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível encontrar o maior"
+      });
+    }
+  });
 
 
 // exporta a router para usar no app
