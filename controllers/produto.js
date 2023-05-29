@@ -112,5 +112,32 @@ router.delete("/produto/:id", async (req, res) => {
   });
 
 
+  /// busca o produto conforme o id
+router.get("/produto/:id", async (req, res) => {
+    const Id = req.params.id;
+  
+    try {
+      const produtos = await db.Produto.findAll({
+        
+        attributes: ["id","nome", "preco"],
+        where: { Id }
+      });
+  
+      if (produtos.length > 0) {
+        return res.json({ produtos });
+      } else {
+        return res.status(404).json({
+          mensagem: "Nenhum produto encontrado"
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível buscar o produto"
+      });
+    }
+  });
+
+
 // exporta a router para usar no app
 module.exports = router;
