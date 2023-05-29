@@ -13,16 +13,22 @@ module.exports = (sequelize, DataTypes) => {
       Venda.belongsTo(models.Pessoa, {
         foreignKey: 'pessoaId',
       });
-     
+
+
+      Venda.hasMany(models.ProdutoVenda, {
+        foreignKey: 'vendaId',
+      });
     }
-  }
-  Venda.init({
-    codigo: DataTypes.INTEGER,
-    pessoaId: DataTypes.INTEGER,
-    total: DataTypes.DOUBLE
-  }, {
-    sequelize,
-    modelName: 'Venda',
-  });
-  return Venda;
+  
+}
+Venda.init({
+  codigo: DataTypes.INTEGER,
+  pessoaId: DataTypes.INTEGER,
+  total: DataTypes.DOUBLE
+  
+}, {
+  sequelize,
+  modelName: 'Venda',
+});
+return Venda;
 };

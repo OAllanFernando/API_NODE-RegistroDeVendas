@@ -6,6 +6,8 @@ const db = require('./../db/models');
 // chama a função do express, permite modularizar o projeto com os controllers, tornando esses metodos acessiveis
 const router = express.Router();
 
+
+
 //rota de cadastro 
 router.post("/venda", async (req, res) => {
     var dados = req.body;
@@ -116,6 +118,11 @@ router.delete("/venda/:id", async (req, res) => {
       });
     }
   });
+
+  
+
+
+
 
 
 // exporta a router para usar no app

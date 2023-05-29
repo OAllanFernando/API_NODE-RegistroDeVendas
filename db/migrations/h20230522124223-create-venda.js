@@ -24,6 +24,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
       },
+      
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
