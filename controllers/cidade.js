@@ -113,5 +113,31 @@ router.delete("/cidade/:id", async (req, res) => {
       });
     }
   });
+
+  //busca por id
+  router.get("/cidade/:id", async (req, res) => {
+    const Id = req.params.id;
+  
+    try {
+      const cidades = await db.Cidade.findAll({
+        
+        attributes: ["id", "nome", "sigla"],
+        where: { Id }
+      });
+  
+      if (cidades.length > 0) {
+        return res.json({ cidades });
+      } else {
+        return res.status(404).json({
+          mensagem: "Nenhum registro encontrado"
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível listar os registros"
+      });
+    }
+  });
 // exporta a router para usar no app
 module.exports = router;

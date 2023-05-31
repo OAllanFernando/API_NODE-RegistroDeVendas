@@ -146,6 +146,32 @@ router.get("/bairromaior", async (req, res) => {
     }
   });
 
+  //busca por id
+  router.get("/bairro/:id", async (req, res) => {
+    const Id = req.params.id;
+  
+    try {
+      const bairros = await db.Bairro.findAll({
+        
+        attributes: ["nome"],
+        where: { Id }
+      });
+  
+      if (bairros.length > 0) {
+        return res.json({ bairros });
+      } else {
+        return res.status(404).json({
+          mensagem: "Nenhum registro encontrado"
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        mensagem: "Erro: Não foi possível listar os registros"
+      });
+    }
+  });
+
 
 // exporta a router para usar no app
 module.exports = router;

@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'pessoaId',
       });
 
+      Venda.belongsToMany(models.Produto, {
+        through: models.ProdutoVenda,
+        foreignKey: 'vendaId',
+      });
+
 
       Venda.hasMany(models.ProdutoVenda, {
         foreignKey: 'vendaId',

@@ -6,12 +6,16 @@ const db = require('../db/models');
 // chama a função do express, permite modularizar o projeto com os controllers, tornando esses metodos acessiveis
 const router = express.Router();
 
+// dependencia para as datas
+const { Op } = require('sequelize');
+
 //rota de cadastro 
 router.post("/produtovenda", async (req, res) => {
     var dados = req.body;
 
     // salva no banco
     await db.ProdutoVenda.create(dados).then((dadosUsuario) => {
+        console.log(dados);
         return res.json({
             mensagem: "Venda cadastrada com sucesso!",
 
@@ -123,6 +127,126 @@ router.get("/produtovendamaior", async (req, res) => {
         console.error(error);
         return res.status(500).json({
             mensagem: "Erro: Não foi possível encontrar o maior"
+        });
+    }
+});
+
+// por pessoa
+router.get("/produtovenda/pessoa/:id", async (req, res) => {
+    const Id = req.params.id;
+
+    try {
+        const vendas = await db.ProdutoVenda.findAll({
+            order: [['id', 'DESC']],
+            where: {
+                '$Venda.Pessoa.id$': Id
+            },
+            include: [{
+                model: db.Produto,
+                attributes: ['nome', 'preco']
+            },
+            {
+                model: db.Venda,
+                    include: [{
+                        model: db.Pessoa,
+                        attributes: ['nome', 'telefone']
+                    }]
+            }],
+        });
+
+        if (vendas.length > 0) {
+            return res.json({ vendas });
+        } else {
+            return res.status(404).json({
+                mensagem: "Nenhum registro encontrado"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            mensagem: "Erro: Não foi possível listar os registros"
+        });
+    }
+});
+
+// por produto
+router.get("/produtovenda/produto/:id", async (req, res) => {
+    const Id = req.params.id;
+
+    try {
+        const vendas = await db.ProdutoVenda.findAll({
+            order: [['id', 'DESC']],
+            where: {
+                '$Produto.id$': Id
+            },
+            include: [{
+                model: db.Produto,
+                attributes: ['nome', 'preco']
+            },
+            {
+                model: db.Venda,
+                    include: [{
+                        model: db.Pessoa,
+                        attributes: ['nome', 'telefone']
+                    }]
+            }],
+        });
+
+        if (vendas.length > 0) {
+            return res.json({ vendas });
+        } else {
+            return res.status(404).json({
+                mensagem: "Nenhum registro encontrado"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            mensagem: "Erro: Não foi possível listar os registros"
+        });
+    }
+});
+
+
+
+// por data https://backefront.com.br/sequelize-query-between/#:~:text=Sua%20utilização%20é%20muito%20simples,de%20Op%20%2C%20do%20próprio%20Sequelize.&text=import%20Appointment%20from%20"..%2F,esteja%20utilizando%20a%20síntaxe%20antiga.
+//https://www.youtube.com/watch?v=Fbu7z5dXcRs
+router.get("/produtovenda/periodo/:dataInicial/:dataFinal", async (req, res) => {
+    const { dataInicial, dataFinal } = req.params;
+    const dataInicio = new Date(dataInicial); 
+    const dataFim = new Date(dataFinal); 
+    try {
+        const vendas = await db.ProdutoVenda.findAll({
+            order: [['id', 'DESC']],
+            where: {
+                createdAt: {
+                    [Op.between]: [dataInicio, dataFim]
+                }
+            },
+            include: [{
+                model: db.Produto,
+                attributes: ['nome', 'preco']
+            },
+            {
+                model: db.Venda,
+                include: [{
+                    model: db.Pessoa,
+                    attributes: ['nome', 'telefone']
+                }]
+            }],
+        });
+
+        if (vendas.length > 0) {
+            return res.json({ vendas });
+        } else {
+            return res.status(404).json({
+                mensagem: "Nenhum registro encontrado"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            mensagem: "Erro: Não foi possível listar os registros"
         });
     }
 });
